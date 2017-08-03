@@ -1,0 +1,54 @@
+github上添加远程库：
+1.在用户主目录下，非远程库目录
+	$ ssh-keygen -t rsa -C "youremail@example.com" 
+  这里的邮箱是github注册的邮箱，之后会要求确认路径和输入密码
+  如果一切默认会有个.ssh的目录，里面有id_rsa和id_rsa.pub两个文件，
+  id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+2.登陆GitHub，右上头像右侧下拉打开“Settings”，“SSH and GPG keys”页面，右上角“New SSH key”：
+  输入Title，任意输入标题，Key 复制id_rsa.pub里面的内容。
+  
+  最后友情提示，在GitHub上免费托管的Git仓库，任何人都可以看到喔（但只有你自己才能改）。所以，
+  不要把敏感信息放进去。
+  如果你不想让别人看到Git库，有两个办法，一个是交点保护费，让GitHub把公开的仓库变成私有的，
+  另一个办法是自己动手，搭一个Git服务器，因为是你自己的Git服务器，所以别人也是看不见的。
+  至此，GitHub通过SSH协议已经知道了你的公钥，确认只有你才能推送。
+  GitHub允许你添加多个Key。假定你有若干电脑，你一会儿在公司提交，一会儿在家里提交，
+  只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。
+3.登陆GitHub，右上角头像左侧选“New repository”，“Repository name”自己取一个，选Public，下面两个none。
+  弹出页面内根据…or push an existing repository from the command line下面的提示复制：
+    $git remote add origin https://github.com/wangxxw/333.git
+	$git push -u origin master
+  当你第一次使用Git的clone或者push命令连接GitHub时，
+  Git会输出一个警告，告诉你已经把GitHub的Key添加到本机的一个信任列表里了
+  这个警告只会出现一次，后面的操作就不会有任何警告了。
+  这时可能会弹出用户名和密码，github的邮箱和密码。
+  添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的。
+  由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master分支内容推送的
+  远程新的master分支，还会把本地的master分支和远程的master分支关联起来，在以后的推送或者拉取时就可以
+  简化命令使用git push origin master。
+  推送成功后，点击左上角文件夹名称，可以立刻在GitHub页面中看到远程库的内容已经和本地一模一样。
+  
+  此后，每次本地提交后，只要有必要，就可以使用命令git push origin master推送最新修改。
+  
+4.github用户名下的Popular repositories可以建多个，删除则是打开要删除的，点击Settings，最下面
+  Delete this repository,输入要删除的repositorie名称（也就是当前的名称）即可。
+
+以上就是 先有本地库，后有远程库的时候，如何关联远程库。
+  
+分布式版本系统的最大好处之一是在本地工作完全不需要考虑远程库的存在，也就是有没有联网都可以正常工作，
+当有网络的时候，再把本地提交推送一下就完成了同步。
+
+现在，假设我们从零开发，那么最好的方式是先创建远程库，然后，从远程库克隆。
+
+1.登陆GitHub，创建一个新的仓库，用户名后面输入xxxx/gitskills（“Repository name”自己取一个gitskills）
+  然后我们还是勾选Public，再勾选Initialize this repository with a README，下面还是两个none。
+  这样GitHub会自动为我们创建一个README.md文件。创建完毕后，可以看到README.md文件。
+  现在，远程库已经准备好了，下一步是用命令git clone克隆一个本地库。
+2.点击Clone or download,选use SSH，复制git@github.com:wangxxw/333.git
+    $$ git clone git@github.com:wangxxw/222.git
+	
+你也许还注意到，GitHub给出的地址不止一个，还可以用https://github.com/michaelliao/gitskills.git
+这样的地址。实际上，Git支持多种协议，默认的git://使用ssh，但也可以使用https等其他协议。
+使用https除了速度慢以外，还有个最大的麻烦是每次推送都必须输入口令，但是在某些只开放http端口的公司
+内部就无法使用ssh协议而只能用https。
+	
